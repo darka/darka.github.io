@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Tech Blog</title>
+    <title>Tags on Darius&#39; Code Tinkerings</title>
     <link>https://darka.github.io/tags/</link>
-    <description>Recent content in Tags on Tech Blog</description>
+    <description>Recent content in Tags on Darius&#39; Code Tinkerings</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://darka.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Jun 2021 21:44:00 +0000</lastBuildDate><atom:link href="https://darka.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>algorithms</title>
+      <link>https://darka.github.io/tags/algorithms/</link>
+      <pubDate>Thu, 10 Jun 2021 21:44:00 +0000</pubDate>
+      
+      <guid>https://darka.github.io/tags/algorithms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rust</title>
+      <link>https://darka.github.io/tags/rust/</link>
+      <pubDate>Thu, 10 Jun 2021 21:44:00 +0000</pubDate>
+      
+      <guid>https://darka.github.io/tags/rust/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

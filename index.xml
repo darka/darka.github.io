@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tech Blog</title>
+    <title>Darius&#39; Code Tinkerings</title>
     <link>https://darka.github.io/</link>
-    <description>Recent content on Tech Blog</description>
+    <description>Recent content on Darius&#39; Code Tinkerings</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 10 Jun 2021 21:44:00 +0000</lastBuildDate><atom:link href="https://darka.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://darka.github.io/about/</link>
+      <pubDate>Sun, 20 Jun 2021 16:56:59 +0100</pubDate>
+      
+      <guid>https://darka.github.io/about/</guid>
+      <description>Hello, I am Darius and I work as a software engineer in finance in London. I got my Computer Science degree at the University of Edinburgh in Scotland. I originally hail from Vilnius, Lithuania.
+The purpose of this blog is to share some personal coding related tinkerings.</description>
+    </item>
+    
     <item>
       <title>3SUM in Rust</title>
       <link>https://darka.github.io/posts/3sum-in-rust/</link>
       <pubDate>Thu, 10 Jun 2021 21:44:00 +0000</pubDate>
       
       <guid>https://darka.github.io/posts/3sum-in-rust/</guid>
-      <description>3SUM in Rust 🔗3SUM is a famous problem in computer science, and often comes up in Software Engineering interview questions of the leetcode variety. Here we will present a simple solution in Rust.
-There are variations to how the problem is generally formulated. The formulation we will discuss is:
- Given an array of integers, find all triplets that sum to zero, i.e. a + b + c = 0 Do not output duplicates.</description>
+      <description>A solution to the well known 3SUM problem written in Rust with O(n²) running time</description>
     </item>
     
   </channel>
