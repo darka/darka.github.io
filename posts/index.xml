@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Darius&#39; Code Tinkerings</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Jun 2021 21:44:00 +0000</lastBuildDate><atom:link href="https://darka.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Jun 2021 12:30:00 +0000</lastBuildDate><atom:link href="https://darka.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python Enumeration Comparisons</title>
+      <link>https://darka.github.io/posts/python-enum-comparison/</link>
+      <pubDate>Sat, 26 Jun 2021 12:30:00 +0000</pubDate>
+      
+      <guid>https://darka.github.io/posts/python-enum-comparison/</guid>
+      <description>Working around somewhat unintuitive Enum comparison behaviour in Python</description>
+    </item>
+    
     <item>
       <title>3SUM in Rust</title>
       <link>https://darka.github.io/posts/3sum-in-rust/</link>
