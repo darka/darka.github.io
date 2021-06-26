@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Python Enumeration Comparisons | Darius&#39; Code Tinkerings</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="Working around somewhat unintuitive Enum comparison behaviour in Python">
+<meta name="generator" content="Hugo 0.83.1" />
+
+
+  <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+ 
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-199920153-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/about">About</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Python Enumeration Comparisons</h1>
+
+    <div class="tip">
+        <span>
+          Jun 26, 2021 12:30
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          
+            706 words
+          
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          4 minute read
+        </span>
+    </div>
+
+    <div class="content">
+      <h1 id="example">Example <a href="#example" class="anchor">🔗</a></h1><p>Imagine we need to store a mapping between animals and their corresponding animal classes inside an enumeration.
+We start by defining an animal class enum:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">enum</span> <span style="color:#007020;font-weight:bold">import</span> Enum
+<span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">AnimalClass</span>(Enum):
+<span style="color:#666">...</span>    MAMMAL <span style="color:#666">=</span> <span style="color:#40a070">1</span>
+<span style="color:#666">...</span>    BIRD <span style="color:#666">=</span> <span style="color:#40a070">2</span>
+<span style="color:#666">...</span>    REPTILE <span style="color:#666">=</span> <span style="color:#40a070">3</span></code></pre></div>
+<p>We then define our animal enum:
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">Animal</span>(Enum):
+<span style="color:#666">...</span>    MAGPIE <span style="color:#666">=</span> AnimalClass<span style="color:#666">.</span>BIRD
+<span style="color:#666">...</span>    SQUIRREL <span style="color:#666">=</span> AnimalClass<span style="color:#666">.</span>MAMMAL
+<span style="color:#666">...</span>    OPOSSUM <span style="color:#666">=</span> AnimalClass<span style="color:#666">.</span>MAMMAL</code></pre></div></p>
+<p>However, if we try to compare members of the <code>Animal</code> enum, the behaviour may be somewhat unintuitive:
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>MAGPIE <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+False
+<span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+True</code></pre></div></p>
+<p>Enum members are compared by identity, so only the value matters, and hence <code>SQUIRREL</code> and <code>OPOSSUM</code> evaluate as equal.</p>
+<h1 id="comparisons">Comparisons <a href="#comparisons" class="anchor">🔗</a></h1><p>Let&rsquo;s examine the enum comparison behaviour further by taking another simple example:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
+<span style="color:#666">...</span>     FOO <span style="color:#666">=</span> <span style="color:#40a070">1</span>
+<span style="color:#666">...</span>     BAR <span style="color:#666">=</span> <span style="color:#40a070">2</span>
+<span style="color:#666">...</span>
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value
+False
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAR
+False</code></pre></div>
+<p>So far so good. The values are different, hence comparison between members with different values evaluates to <code>False</code>.</p>
+<p>Let&rsquo;s add another member to the enumeration, but give it the same value:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
+<span style="color:#666">...</span>     FOO <span style="color:#666">=</span> <span style="color:#40a070">1</span>
+<span style="color:#666">...</span>     BAR <span style="color:#666">=</span> <span style="color:#40a070">2</span>
+<span style="color:#666">...</span>     BAZ <span style="color:#666">=</span> <span style="color:#40a070">2</span>
+<span style="color:#666">...</span>
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
+True
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
+True</code></pre></div>
+<p>As the values of enumeration members are the same, the members themselves evaluate as equal!</p>
+<blockquote>
+<p><strong>Note:</strong> We can disallow defining enumerations with duplicate values by using <a 
+    href="https://docs.python.org/3/library/enum.html#enum.unique"
+    
+    
+     
+      target="_blank" 
+      rel="noopener"
+    
+>
+    the <code>@unique</code> decorator
+</a></p>
+</blockquote>
+<p>What about comparing enumeration members with their own values?</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> <span style="color:#40a070">2</span>
+True
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> <span style="color:#40a070">2</span>
+False</code></pre></div>
+<p>Although we can compare the values directly, comparing members and their values evaluates to <code>False</code>.</p>
+<p>One way to avoid issues with comparisons, is to use automatic values:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">enum</span> <span style="color:#007020;font-weight:bold">import</span> Enum, auto
+<span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
+<span style="color:#666">...</span>     FOO <span style="color:#666">=</span> auto()
+<span style="color:#666">...</span>     BAR <span style="color:#666">=</span> auto()
+<span style="color:#666">...</span>     BAZ <span style="color:#666">=</span> auto()
+<span style="color:#666">...</span>
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
+False
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
+False</code></pre></div>
+<p>This ensures all values are different, but means we can no longer store anything useful as a value.
+In some cases (as in the original example) we may want to keep the values around rather than replace them with <code>auto()</code>.
+If some of the values are the same, the equality behaviour described above may not be what we want.</p>
+<p>There is a way to work around this by storing the value as extra attribute on an enumeration.</p>
+<h1 id="extra-attributes">Extra Attributes <a href="#extra-attributes" class="anchor">🔗</a></h1><p>Python supports adding extra attributes to an enumeration by <a 
+    href="https://docs.python.org/3/library/enum.html#using-a-custom-new"
+    
+    
+     
+      target="_blank" 
+      rel="noopener"
+    
+>
+    overriding the <code>__new__</code> method:
+</a></p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
+<span style="color:#666">...</span>    FOO <span style="color:#666">=</span> <span style="color:#40a070">1</span>, <span style="color:#4070a0">&#39;a&#39;</span>
+<span style="color:#666">...</span>    BAR <span style="color:#666">=</span> <span style="color:#40a070">2</span>, <span style="color:#4070a0">&#39;b&#39;</span>
+<span style="color:#666">...</span>    BAZ <span style="color:#666">=</span> <span style="color:#40a070">3</span>, <span style="color:#4070a0">&#39;b&#39;</span>
+<span style="color:#666">...</span>
+<span style="color:#666">...</span>    <span style="color:#007020;font-weight:bold">def</span> __new__(cls, value, extra):
+<span style="color:#666">...</span>        obj <span style="color:#666">=</span> <span style="color:#007020">object</span><span style="color:#666">.</span>__new__(cls)
+<span style="color:#666">...</span>        obj<span style="color:#666">.</span>_value_ <span style="color:#666">=</span> value
+<span style="color:#666">...</span>        obj<span style="color:#666">.</span>extra <span style="color:#666">=</span> extra
+<span style="color:#666">...</span>        <span style="color:#007020;font-weight:bold">return</span> obj</code></pre></div>
+<p>We can then access the new attribute on any member:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO<span style="color:#666">.</span>value
+<span style="color:#40a070">1</span>
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO<span style="color:#666">.</span>extra
+<span style="color:#4070a0">&#39;a&#39;</span></code></pre></div>
+<p>This allows distinct enum members to share the same attribute value.</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>extra <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>extra
+True
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
+False
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
+False</code></pre></div>
+<p>Hence, we can now store a mapping inside an enumeration with members sharing the same attribute value, but also ensure
+they do not evaluate as equal.</p>
+<h1 id="fixing-the-example">Fixing the Example <a href="#fixing-the-example" class="anchor">🔗</a></h1><p>We start by defining our <code>AnimalClass</code> enumeration again (this time using <code>auto()</code>):
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">AnimalClass</span>(Enum):
+<span style="color:#666">...</span>    MAMMAL <span style="color:#666">=</span> auto()
+<span style="color:#666">...</span>    BIRD <span style="color:#666">=</span> auto()
+<span style="color:#666">...</span>    REPTILE <span style="color:#666">=</span> auto()</code></pre></div></p>
+<p>We then define our <code>Animal</code> enum, but this time we override <code>__new__</code> and store the animal class as an extra attribute:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">Animal</span>(Enum):
+<span style="color:#666">...</span>     <span style="color:#007020;font-weight:bold">def</span> __new__(cls, value, animal_class):
+<span style="color:#666">...</span>         obj <span style="color:#666">=</span> <span style="color:#007020">object</span><span style="color:#666">.</span>__new__(cls)
+<span style="color:#666">...</span>         obj<span style="color:#666">.</span>_value_ <span style="color:#666">=</span> value
+<span style="color:#666">...</span>         obj<span style="color:#666">.</span>animal_class <span style="color:#666">=</span> animal_class
+<span style="color:#666">...</span>         <span style="color:#007020;font-weight:bold">return</span> obj
+<span style="color:#666">...</span>     MAGPIE <span style="color:#666">=</span> (auto(), AnimalClass<span style="color:#666">.</span>BIRD)
+<span style="color:#666">...</span>     SQUIRREL <span style="color:#666">=</span> (auto(), AnimalClass<span style="color:#666">.</span>MAMMAL)
+<span style="color:#666">...</span>     OPOSSUM <span style="color:#666">=</span> (auto(), AnimalClass<span style="color:#666">.</span>MAMMAL)</code></pre></div>
+<p>This gives us the behaviour we want, where the enumeration members do not evaluate as equal, although the animal class they belong to is the same:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+False
+<span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL<span style="color:#666">.</span>animal_class <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM<span style="color:#666">.</span>animal_class
+True</code></pre></div>
+<h1 id="disclaimer">Disclaimer <a href="#disclaimer" class="anchor">🔗</a></h1><p>Although the enumeration now behaves how we want, the readability of the code has been significantly reduced. Someone who is not familiar with these
+enumeration tricks will find it difficult to decipher what the fixed example does, and will likely be inclined to convert it to a
+simple enum, potentially introducing bugs in the process.</p>
+<p>Caution must be taken when introducing a complicated piece of code to a codebase.</p>
+
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://darka.github.io/tags/python">python</a>
+            
+        </div>
+    
+    
+    
+  <div id="comment">
+    
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "darius-code-tinkerings" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </div>
+
+
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <p class="copyright">
+    
+       © Copyright 
+       2021 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </p>
+    <p class="powerby">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+  </body>
+</html>

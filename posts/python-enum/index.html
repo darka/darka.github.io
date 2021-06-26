@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Python Enumeration Comparisons | Darius&#39; Code Tinkerings</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="Working around somewhat unintuitive Enum comparison behaviour in Python">
+<meta name="generator" content="Hugo 0.83.1" />
+
+
+  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+ 
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-199920153-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/about">About</a>
+
+	
+
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">Python Enumeration Comparisons</h1>
+
+    <div class="tip">
+        <span>
+          Jun 25, 2021 12:30
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          
+            347 words
+          
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          2 minute read
+        </span>
+    </div>
+
+    <div class="content">
+      <h1 id="comparisons">Comparisons <a href="#comparisons" class="anchor">🔗</a></h1><p>The way how comparisons between members of Python enumerations work is somewhat unintuitive. Let&rsquo;s take a simple example:</p>
+<pre><code>&gt;&gt;&gt; from enum import Enum
+&gt;&gt;&gt; class MyEnum(Enum):
+...     FOO = 1
+...     BAR = 2
+...
+&gt;&gt;&gt; MyEnum.FOO.value == MyEnum.BAR.value
+False
+&gt;&gt;&gt; MyEnum.FOO == MyEnum.BAR
+False
+</code></pre><p>So far so good. The values are different, hence the comparison between members evaluates as <code>False</code>.</p>
+<p>Let&rsquo;s add another member to the enumeration, but give it the same value:</p>
+<pre><code>&gt;&gt;&gt; from enum import Enum
+&gt;&gt;&gt; class MyEnum(Enum):
+...     FOO = 1
+...     BAR = 2
+...     BAZ = 2
+...
+&gt;&gt;&gt; MyEnum.BAR.value == MyEnum.BAZ.value
+True
+&gt;&gt;&gt; MyEnum.BAR == MyEnum.BAZ
+True
+</code></pre><p>As the values of the enumeration members are the same, the members themselves evaluate as equal!</p>
+<p>Note: we can disallow defining enumerations with duplicate values by adding using the <code>@unique</code> decorator.</p>
+<p>What about comparing enumeration members with their values?</p>
+<pre><code>&gt;&gt;&gt; MyEnum.BAR.value == 2
+True
+&gt;&gt;&gt; MyEnum.BAR == 2
+False
+</code></pre><p>Although we can compare the values directly, comparing members and their values evaluates to <code>False</code>.</p>
+<p>To avoid issues with comparisons, a simple solution is to use automatic values:</p>
+<pre><code>&gt;&gt;&gt; class MyEnum(Enum):
+...     FOO = auto()
+...     BAR = auto()
+...     BAZ = auto()
+...
+&gt;&gt;&gt; MyEnum.BAR.value == MyEnum.BAZ.value
+False
+&gt;&gt;&gt; MyEnum.BAR == MyEnum.BAZ
+False
+</code></pre><p>However, in some cases we may want to keep enumeration member values the same while ensuring they don&rsquo;t evaluate as equal.
+This can be achieved by adding extra attributes to an enumeration.</p>
+<h1 id="extra-attributes">Extra Attributes <a href="#extra-attributes" class="anchor">🔗</a></h1><p>Python supports adding extra attributes to your enumeration by <a 
+    href="https://docs.python.org/3/library/enum.html#using-a-custom-new"
+    
+    
+     
+      target="_blank" 
+      rel="noopener"
+    
+>
+    overriding the <code>__new__</code> method
+</a>.</p>
+<h1 id="auto-trick">auto() trick <a href="#auto-trick" class="anchor">🔗</a></h1><pre><code>&gt;&gt;&gt; class AnimalClass(Enum):
+...    MAMMAL = auto()
+...    BIRD = auto()
+...    REPTILE = auto()
+</code></pre><pre><code>&gt;&gt;&gt; class Animal(Enum):
+...    MAGPIE = AnimalClass.BIRD
+...    SQUIRREL = AnimalClass.MAMMAL
+...    OPOSSUM = AnimalClass.MAMMAL
+</code></pre><pre><code>&gt;&gt;&gt; Animal.MAGPIE == Animal.OPOSSUM
+False
+&gt;&gt;&gt; Animal.SQUIRREL == Animal.OPOSSUM
+True
+</code></pre><pre><code>&gt;&gt;&gt; class Animal(Enum):
+...     def __new__(cls, value, animal_class):
+...         obj = object.__new__(cls)
+...         obj._value_ = value
+...         obj.animal_class = animal_class
+...         return obj
+...     MAGPIE = (auto(), AnimalClass.BIRD)
+...     SQUIRREL = (auto(), AnimalClass.MAMMAL)
+...     OPOSSUM = (auto(), AnimalClass.MAMMAL)
+</code></pre><pre><code>&gt;&gt;&gt; Animal.SQUIRREL == Animal.OPOSSUM
+False
+&gt;&gt;&gt; Animal.SQUIRREL.animal_class == Animal.OPOSSUM.animal_class
+True
+</code></pre>
+    </div>
+
+    
+        <div class="tags">
+            
+                <a href="https://darka.github.io/tags/python">python</a>
+            
+        </div>
+    
+    
+    
+  <div id="comment">
+    
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "darius-code-tinkerings" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </div>
+
+
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+
+    <p class="copyright">
+    
+       © Copyright 
+       2021 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       
+    
+    </p>
+    <p class="powerby">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+  </body>
+</html>
