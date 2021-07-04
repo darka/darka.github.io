@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>Python Enumeration Comparisons | Darius&#39; Code Tinkerings</title>
+    <title>Python Enumeration Aliases | Darius&#39; Code Tinkerings</title>
 
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
-<meta name="description" content="Working around somewhat unintuitive Enum comparison behaviour in Python">
+<meta name="description" content="Working around somewhat unintuitive Enum member aliasing behaviour in Python">
 <meta name="generator" content="Hugo 0.83.1" />
 
 
@@ -57,7 +57,7 @@ if (!doNotTrack) {
       
 
 <section id="single">
-    <h1 class="title">Python Enumeration Comparisons</h1>
+    <h1 class="title">Python Enumeration Aliases</h1>
 
     <div class="tip">
         <span>
@@ -68,7 +68,7 @@ if (!doNotTrack) {
         </span>
         <span>
           
-            706 words
+            756 words
           
         </span>
         <span class="split">
@@ -80,7 +80,7 @@ if (!doNotTrack) {
     </div>
 
     <div class="content">
-      <h1 id="example">Example <a href="#example" class="anchor">🔗</a></h1><p>Imagine we need to store a mapping between animals and their corresponding animal classes inside an enumeration.
+      <h1 id="example">Example <a href="#example" class="anchor">🔗</a></h1><p>Imagine we would like to store a mapping between animals and their corresponding animal classes inside an enumeration.
 We start by defining an animal class enum:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">enum</span> <span style="color:#007020;font-weight:bold">import</span> Enum
 <span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">AnimalClass</span>(Enum):
@@ -93,11 +93,11 @@ We start by defining an animal class enum:</p>
 <span style="color:#666">...</span>    SQUIRREL <span style="color:#666">=</span> AnimalClass<span style="color:#666">.</span>MAMMAL
 <span style="color:#666">...</span>    OPOSSUM <span style="color:#666">=</span> AnimalClass<span style="color:#666">.</span>MAMMAL</code></pre></div></p>
 <p>However, if we try to compare members of the <code>Animal</code> enum, the behaviour may be somewhat unintuitive:
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>MAGPIE <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>MAGPIE <span style="color:#007020;font-weight:bold">is</span> Animal<span style="color:#666">.</span>OPOSSUM
 False
-<span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+<span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#007020;font-weight:bold">is</span> Animal<span style="color:#666">.</span>OPOSSUM
 True</code></pre></div></p>
-<p>Enum members are compared by identity, so only the value matters, and hence <code>SQUIRREL</code> and <code>OPOSSUM</code> evaluate as equal.</p>
+<p>Enum members are compared by identity, and as both <code>SQUIRREL</code> and <code>OPOSSUM</code> have the same value, they evaluate as equal.</p>
 <h1 id="comparisons">Comparisons <a href="#comparisons" class="anchor">🔗</a></h1><p>Let&rsquo;s examine the enum comparison behaviour further by taking another simple example:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
 <span style="color:#666">...</span>     FOO <span style="color:#666">=</span> <span style="color:#40a070">1</span>
@@ -105,9 +105,9 @@ True</code></pre></div></p>
 <span style="color:#666">...</span>
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value
 False
-<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAR
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>FOO <span style="color:#007020;font-weight:bold">is</span> MyEnum<span style="color:#666">.</span>BAR
 False</code></pre></div>
-<p>So far so good. The values are different, hence comparison between members with different values evaluates to <code>False</code>.</p>
+<p>So far so good. The values are different, hence identity comparison between members with different values evaluates to <code>False</code>.</p>
 <p>Let&rsquo;s add another member to the enumeration, but give it the same value:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">MyEnum</span>(Enum):
 <span style="color:#666">...</span>     FOO <span style="color:#666">=</span> <span style="color:#40a070">1</span>
@@ -116,9 +116,13 @@ False</code></pre></div>
 <span style="color:#666">...</span>
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
 True
-<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#007020;font-weight:bold">is</span> MyEnum<span style="color:#666">.</span>BAZ
 True</code></pre></div>
-<p>As the values of enumeration members are the same, the members themselves evaluate as equal!</p>
+<p>As the values of the enumeration members are the same, the members themselves evaluate as equal! The <code>BAZ</code> member is internally
+considered an alias of <code>BAZ</code>.</p>
+<p>In fact, if we try to convert the enumeration to a list, <code>BAZ</code> is not present in the result:</p>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> <span style="color:#007020">list</span>(MyEnum)
+[<span style="color:#666">&lt;</span>MyEnum<span style="color:#666">.</span>FOO: <span style="color:#40a070">1</span><span style="color:#666">&gt;</span>, <span style="color:#666">&lt;</span>MyEnum<span style="color:#666">.</span>BAR: <span style="color:#40a070">2</span><span style="color:#666">&gt;</span>]</code></pre></div>
 <blockquote>
 <p><strong>Note:</strong> We can disallow defining enumerations with duplicate values by using <a 
     href="https://docs.python.org/3/library/enum.html#enum.unique"
@@ -135,6 +139,8 @@ True</code></pre></div>
 <p>What about comparing enumeration members with their own values?</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> <span style="color:#40a070">2</span>
 True
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#007020;font-weight:bold">is</span> <span style="color:#40a070">2</span>
+False
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> <span style="color:#40a070">2</span>
 False</code></pre></div>
 <p>Although we can compare the values directly, comparing members and their values evaluates to <code>False</code>.</p>
@@ -147,11 +153,11 @@ False</code></pre></div>
 <span style="color:#666">...</span>
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
 False
-<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#007020;font-weight:bold">is</span> MyEnum<span style="color:#666">.</span>BAZ
 False</code></pre></div>
 <p>This ensures all values are different, but means we can no longer store anything useful as a value.
 In some cases (as in the original example) we may want to keep the values around rather than replace them with <code>auto()</code>.
-If some of the values are the same, the equality behaviour described above may not be what we want.</p>
+If some of the values are the same, the identity comparison behaviour described above may not be what we want.</p>
 <p>There is a way to work around this by storing the value as extra attribute on an enumeration.</p>
 <h1 id="extra-attributes">Extra Attributes <a href="#extra-attributes" class="anchor">🔗</a></h1><p>Python supports adding extra attributes to an enumeration by <a 
     href="https://docs.python.org/3/library/enum.html#using-a-custom-new"
@@ -184,6 +190,8 @@ If some of the values are the same, the equality behaviour described above may n
 True
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR<span style="color:#666">.</span>value <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ<span style="color:#666">.</span>value
 False
+<span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#007020;font-weight:bold">is</span> MyEnum<span style="color:#666">.</span>BAZ
+False
 <span style="color:#666">&gt;&gt;&gt;</span> MyEnum<span style="color:#666">.</span>BAR <span style="color:#666">==</span> MyEnum<span style="color:#666">.</span>BAZ
 False</code></pre></div>
 <p>Hence, we can now store a mapping inside an enumeration with members sharing the same attribute value, but also ensure
@@ -204,7 +212,7 @@ they do not evaluate as equal.</p>
 <span style="color:#666">...</span>     SQUIRREL <span style="color:#666">=</span> (auto(), AnimalClass<span style="color:#666">.</span>MAMMAL)
 <span style="color:#666">...</span>     OPOSSUM <span style="color:#666">=</span> (auto(), AnimalClass<span style="color:#666">.</span>MAMMAL)</code></pre></div>
 <p>This gives us the behaviour we want, where the enumeration members do not evaluate as equal, although the animal class they belong to is the same:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL <span style="color:#007020;font-weight:bold">is</span> Animal<span style="color:#666">.</span>OPOSSUM
 False
 <span style="color:#666">&gt;&gt;&gt;</span> Animal<span style="color:#666">.</span>SQUIRREL<span style="color:#666">.</span>animal_class <span style="color:#666">==</span> Animal<span style="color:#666">.</span>OPOSSUM<span style="color:#666">.</span>animal_class
 True</code></pre></div>
