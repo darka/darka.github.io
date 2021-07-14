@@ -6,7 +6,16 @@
     <description>Recent content on Darius&#39; Code Tinkerings</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Jun 2021 12:30:00 +0000</lastBuildDate><atom:link href="https://darka.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 14 Jul 2021 20:57:13 +0100</lastBuildDate><atom:link href="https://darka.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Generating a PNG File in Python</title>
+      <link>https://darka.github.io/posts/generating-png-in-python/</link>
+      <pubDate>Wed, 14 Jul 2021 20:57:13 +0100</pubDate>
+      
+      <guid>https://darka.github.io/posts/generating-png-in-python/</guid>
+      <description>How to create a PNG image in Python from scratch</description>
+    </item>
+    
     <item>
       <title>Python Enumeration Aliases</title>
       <link>https://darka.github.io/posts/python-enum-comparison/</link>
