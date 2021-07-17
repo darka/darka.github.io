@@ -68,7 +68,7 @@ if (!doNotTrack) {
         </span>
         <span>
           
-            1408 words
+            1426 words
           
         </span>
         <span class="split">
@@ -88,7 +88,9 @@ but the standard Python library.</p>
 checkerboard pattern and spend the rest of our time focusing on writing that to a PNG file.</p>
 <p>First of all, we need to decide how we represent a pixel. A common way to do this is to store the pixel as a sequence of 3 values,
 one for each of the RGB (red, green, blue) components. Let&rsquo;s define that as a Python type alias:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Pixel <span style="color:#666">=</span> Tuple[<span style="color:#007020">int</span>, <span style="color:#007020">int</span>, <span style="color:#007020">int</span>]</code></pre></div>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">typing</span> <span style="color:#007020;font-weight:bold">import</span> Tuple
+
+Pixel <span style="color:#666">=</span> Tuple[<span style="color:#007020">int</span>, <span style="color:#007020">int</span>, <span style="color:#007020">int</span>]</code></pre></div>
 <p>What pixels do we want to store? As we will be generating a checkerboard pattern, we only need
 black and white pixels. Let&rsquo;s go ahead and define them as constants:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">BLACK_PIXEL: Pixel <span style="color:#666">=</span> (<span style="color:#40a070">0</span>, <span style="color:#40a070">0</span>, <span style="color:#40a070">0</span>)
@@ -97,7 +99,9 @@ WHITE_PIXEL: Pixel <span style="color:#666">=</span> (<span style="color:#40a070
 <p>Now that we have pixels, how do we represent the image? For simplicity&rsquo;s sake, we will use a list of pixel lists, where each pixel list is
 a row in the image, and the number of pixel lists is the height of the image. We will make an assumption that all pixel lists have the same
 length (i.e. every row has the same width). Let&rsquo;s define the image as another type alias:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Image <span style="color:#666">=</span> List[List[Pixel]]</code></pre></div>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">from</span> <span style="color:#0e84b5;font-weight:bold">typing</span> <span style="color:#007020;font-weight:bold">import</span> List
+
+Image <span style="color:#666">=</span> List[List[Pixel]]</code></pre></div>
 <h1 id="generating-the-image">Generating the Image <a href="#generating-the-image" class="anchor">🔗</a></h1><p>Now let&rsquo;s write a simple function to generate our checkerboard pattern and return it as our image representation:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">generate_checkerboard_pattern</span>(width: <span style="color:#007020">int</span>, height: <span style="color:#007020">int</span>) <span style="color:#666">-&gt;</span> Image:
     out <span style="color:#666">=</span> []
@@ -230,8 +234,8 @@ standard <code>zlib</code> library. Let&rsquo;s write a function for compression
     data_bytes <span style="color:#666">=</span> <span style="color:#007020">bytearray</span>(data)
     <span style="color:#007020;font-weight:bold">return</span> zlib<span style="color:#666">.</span>compress(data_bytes)</code></pre></div>
 <p>With these two functions we can generate the data field for the IDAT data chunk:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">make_idat</span>(image: Image) <span style="color:#666">-&gt;</span> <span style="color:#007020">bytes</span>:
-    encoded_data <span style="color:#666">=</span> encode_data(image)
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">make_idat</span>(img: Image) <span style="color:#666">-&gt;</span> <span style="color:#007020">bytes</span>:
+    encoded_data <span style="color:#666">=</span> encode_data(img)
     compressed_data <span style="color:#666">=</span> compress_data(encoded_data)
     <span style="color:#007020;font-weight:bold">return</span> compressed_data</code></pre></div>
 <blockquote>
@@ -239,7 +243,7 @@ standard <code>zlib</code> library. Let&rsquo;s write a function for compression
 </blockquote>
 <h1 id="png-output">PNG Output <a href="#png-output" class="anchor">🔗</a></h1><p>Let&rsquo;s put all of this together and write a function to output the whole PNG image.
 We will start out by outputting the PNG header:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">dump_png</span>(out: BinaryIO, image: Image) <span style="color:#666">-&gt;</span> None:
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">dump_png</span>(out: BinaryIO, img: Image) <span style="color:#666">-&gt;</span> None:
     out<span style="color:#666">.</span>write(HEADER)  <span style="color:#60a0b0;font-style:italic"># start by writing the header</span></code></pre></div>
 <p>Now let&rsquo;s consolidate all we need for the Image Header IHDR chunk.</p>
 <p>The width and the height are just the dimensions of the image. Bit depth refers to the number of bits used to represent each channel (not pixel).
@@ -255,32 +259,46 @@ An image defined by RGB triples with no alpha channel has <a
 >
     colour type 2.
 </a></p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#007020;font-weight:bold">assert</span> <span style="color:#007020">len</span>(image) <span style="color:#666">&gt;</span> <span style="color:#40a070">0</span>  <span style="color:#60a0b0;font-style:italic"># assume we were not given empty image data</span>
-    width <span style="color:#666">=</span> <span style="color:#007020">len</span>(image[<span style="color:#40a070">0</span>])
-    height <span style="color:#666">=</span> <span style="color:#007020">len</span>(image)
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#007020;font-weight:bold">assert</span> <span style="color:#007020">len</span>(img) <span style="color:#666">&gt;</span> <span style="color:#40a070">0</span>  <span style="color:#60a0b0;font-style:italic"># assume we were not given empty image data</span>
+    width <span style="color:#666">=</span> <span style="color:#007020">len</span>(img[<span style="color:#40a070">0</span>])
+    height <span style="color:#666">=</span> <span style="color:#007020">len</span>(img)
     bit_depth <span style="color:#666">=</span> <span style="color:#40a070">8</span>  <span style="color:#60a0b0;font-style:italic"># bits per pixel</span>
     color_type <span style="color:#666">=</span> <span style="color:#40a070">2</span>  <span style="color:#60a0b0;font-style:italic"># pixel is RGB triple</span>
 
     ihdr_data <span style="color:#666">=</span> make_ihdr(width, height, bit_depth, color_type)
     chunk(out, <span style="color:#4070a0">b</span><span style="color:#4070a0">&#39;IHDR&#39;</span>, ihdr_data)</code></pre></div>
 <p>After IHDR comes the data IDAT chunk:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    compressed_data <span style="color:#666">=</span> make_idat(image)
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    compressed_data <span style="color:#666">=</span> make_idat(img)
     chunk(out, <span style="color:#4070a0">b</span><span style="color:#4070a0">&#39;IDAT&#39;</span>, data<span style="color:#666">=</span>compressed_data)</code></pre></div>
 <p>Finally, the PNG format requires us to output an IEND chunk that marks the end of the PNG image.
 This chunk does not hold any data:</p>
 <div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    chunk(out, <span style="color:#4070a0">b</span><span style="color:#4070a0">&#39;IEND&#39;</span>, data<span style="color:#666">=</span><span style="color:#4070a0">b</span><span style="color:#4070a0">&#39;&#39;</span>)</code></pre></div>
 <p>Let&rsquo;s write a function that actually opens a binary file and writes out the data:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">save_png</span>(image: Image, filename: <span style="color:#007020">str</span>) <span style="color:#666">-&gt;</span> None:
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">save_png</span>(img: Image, filename: <span style="color:#007020">str</span>) <span style="color:#666">-&gt;</span> None:
     <span style="color:#007020;font-weight:bold">with</span> <span style="color:#007020">open</span>(filename, <span style="color:#4070a0">&#39;wb&#39;</span>) <span style="color:#007020;font-weight:bold">as</span> out:
-        dump_png(out, image)</code></pre></div>
+        dump_png(out, img)</code></pre></div>
 <p>To conclude the demonstration, let&rsquo;s generate the checkerboard pattern and call the function above to save
 it to a file:</p>
-<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">image <span style="color:#666">=</span> generate_checkerboard_pattern(WIDTH, HEIGHT)
-save_png(image, <span style="color:#4070a0">&#39;out.png&#39;</span>)</code></pre></div>
+<div class="highlight"><pre style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">width <span style="color:#666">=</span> <span style="color:#40a070">100</span>
+height <span style="color:#666">=</span> <span style="color:#40a070">100</span>
+
+img <span style="color:#666">=</span> generate_checkerboard_pattern(width, height)
+save_png(img, <span style="color:#4070a0">&#39;out.png&#39;</span>)</code></pre></div>
 <p>Here is our PNG image:</p>
 <p><p class="markdown-image">
   <img src="/img/out.png" alt="Output image"  />
 </p></p>
+<p>Code is available <a 
+    href="https://gist.github.com/darka/061cfac5e95b80b078b769eaae7adf84"
+    
+    
+     
+      target="_blank" 
+      rel="noopener"
+    
+>
+    here.
+</a></p>
 <h1 id="references">References <a href="#references" class="anchor">🔗</a></h1><ul>
 <li>Portable Network Graphics (PNG) Specification: <a href="https://www.w3.org/TR/2003/REC-PNG-20031110/">https://www.w3.org/TR/2003/REC-PNG-20031110/</a></li>
 <li>PyPNG: <a href="https://pypng.readthedocs.io/en/latest/">https://pypng.readthedocs.io/en/latest/</a></li>
